@@ -1,0 +1,90 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter, Amiri } from "next/font/google"
+import Script from "next/script"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { QueryProvider } from "@/components/query-provider"
+import { LanguageProvider } from "@/components/language-provider"
+import { Toaster } from "@/components/ui/toaster"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
+
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+})
+
+export const metadata: Metadata = {
+  title: "Kuran-ı Kerim Uygulaması - Open Source Digital Quran",
+  description:
+    "Modern, açık kaynaklı dijital Kuran-ı Kerim uygulaması. Sesli okuma, meal, güzel tipografi ile topluluk tarafından geliştirilmektedir.",
+  keywords: [
+    "Kuran",
+    "Quran",
+    "İslam",
+    "Islam",
+    "Arapça",
+    "Arabic",
+    "Meal",
+    "Translation",
+    "Açık Kaynak",
+    "Open Source",
+  ],
+  generator: "v0.dev",
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        {/* Instana init script */}
+        <Script id="instana-init" strategy="beforeInteractive">
+          {`
+            (function(s,t,a,n){
+              s[t]||(s[t]=a,n=s[a]=function(){n.q.push(arguments)},
+              n.q=[],n.v=2,n.l=1*new Date)
+            })(window,"InstanaEumObject","ineum");
+            ineum('reportingUrl', 'https://eum-blue-saas.instana.io');
+            ineum('key', 'X7FpN-IbRTmkzOPVaeEWWA');
+            ineum('trackSessions');
+          `}
+        </Script>
+
+        {/* Instana EUM JS */}
+        <Script
+          src="https://eum.instana.io/1.7.5/eum.min.js"
+          strategy="beforeInteractive"
+          defer
+          crossOrigin="anonymous"
+          integrity="sha384-HJjb3vveemdYNUfM1D28dTeXpPPbwPWJinH9ldaGt3KxCO0PNRc4Jb3oQIxMmJMk"
+        />
+      </head>
+      <body className={`${inter.variable} ${amiri.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
+          storageKey="quran-app-theme"
+        >
+          <LanguageProvider>
+            <QueryProvider>
+              {children}
+              <Toaster />
+            </QueryProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
+
